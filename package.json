@@ -1,0 +1,21 @@
+{
+  "name": "data-collection-server",
+  "version": "1.0.0",
+  "description": "A small server to accept post requests from a small front-end drawing app. This is a  prototypes for a data selfie app.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Backend",
+    "post",
+    "drawing"
+  ],
+  "author": "cahaber",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
