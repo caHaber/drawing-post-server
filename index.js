@@ -5,8 +5,8 @@ var bodyParser = require('body-parser');
 
 
 app.use(bodyParser.json());
-//app.use(express.bodyParser());
 
+//app.use(express.bodyParser());
 // app.get('/', function(req, res){
 //     console.log('GET /')
 //     //var html = '<html><body><form method="post" action="http://localhost:3000">Name: <input type="text" name="name" /><input type="submit" value="Submit" /></form></body>';
@@ -16,12 +16,11 @@ app.use(bodyParser.json());
 // });
 
 app.post('/', function(req, res){
+    //TODO check for known fingerprint (me | Dom | alark | noopur)
     console.log('POST /');
     console.log(req.body);
     // console.log(req);
-    fs.writeFile(new Date() + '.json', JSON.stringify(req.body), function(err) {
-
-        
+    fs.writeFile(new Date() + '.json', JSON.stringify(req.body), function(err) {     
         if(err) {
             return console.log(err);
         }  
