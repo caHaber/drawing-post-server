@@ -7,13 +7,22 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 //app.use(express.bodyParser());
-// app.get('/', function(req, res){
-//     console.log('GET /')
-//     //var html = '<html><body><form method="post" action="http://localhost:3000">Name: <input type="text" name="name" /><input type="submit" value="Submit" /></form></body>';
-//     var html = fs.readFileSync('index.html');
-//     res.writeHead(200, {'Content-Type': 'text/html'});
-//     res.end(html);
-// });
+
+
+app.all('/', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+app.get('/', function(req, res){
+    console.log('GET /')
+     //var html = '<html><body><form method="post" action="http://localhost:3000">Name: <input type="text" name="name" /><input type="submit" value="Submit" /></form></body>';
+     var html = '<html><body><h1> From rpi!!!!</h1></body></html>';
+     res.writeHead(200, {'Content-Type': 'text/html'});
+     res.end(html);
+});
+
 
 app.post('/', function(req, res){
     //TODO check for known fingerprint (me | Dom | alark | noopur)
