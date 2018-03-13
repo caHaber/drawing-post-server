@@ -29,11 +29,14 @@ const URLregex = /-.+[^//]/;
 app.post('/', function(req, res){
     //TODO check for known fingerprint (me | Dom | alark | noopur)
     console.log('POST /');
-    console.log(req.body);
+    // console.log(req.body);
     console.log(req.headers.referer);
     
     var name = URLregex.exec(req.headers.referer)
-    fs.writeFile(new Date().getTime() + name + '-.json', JSON.stringify(req.body), function(err) {     
+    var dir = name.replace("-", "");
+    // console.log(dir);
+
+    fs.writeFile('./'+ dir + '/' + new Date().getTime() + name + '-.json', JSON.stringify(req.body), function(err) {     
         if(err) {
             return console.log(err);
         }  
