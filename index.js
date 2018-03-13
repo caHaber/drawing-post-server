@@ -33,7 +33,7 @@ app.post('/', function(req, res){
     console.log(req.headers.referer);
     
     var name = URLregex.exec(req.headers.referer)
-    name[0] = '';
+    name = name.substring(1);;
     // console.log(dir);
 
     fs.writeFile('./'+ name + '/' + new Date().getTime() + name + '-.json', JSON.stringify(req.body), function(err) {     
