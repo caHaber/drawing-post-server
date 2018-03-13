@@ -22,10 +22,25 @@ app.get('/', function(req, res){
      console.log('GET /')
      var html = '<html><body><h1> From rpi!!!!</h1></body></html>';
      res.writeHead(200, {'Content-Type': 'text/html'});
+     switch(req.query.p){
+        case "casey": 
+            folder = './casey/'
+            break;
+        case "alark": 
+            folder = './alark/'
+            break;
+        case "noopur": 
+            folder = './noopur/'
+            break;
+        case "dom": 
+            folder = './dom/'
+            break;     
+     }
 
      filenames = [];
      fs.readdirSync(folder).forEach(file => {
-        filenames.push(file);
+        filenames.push(folder + file);
+        console.log(file, "File");
       })
 
      async.eachSeries(
