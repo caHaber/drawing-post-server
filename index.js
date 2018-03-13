@@ -24,7 +24,7 @@ app.get('/', function(req, res){
      res.writeHead(200, {'Content-Type': 'text/html'});
 
      filenames = [];
-     fs.readdirSync(testFolder).forEach(file => {
+     fs.readdirSync(folder).forEach(file => {
         filenames.push(file);
       })
 
