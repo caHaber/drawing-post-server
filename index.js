@@ -2,7 +2,7 @@ var express = require('express');
 var fs = require('fs');
 var app = express();
 var bodyParser = require('body-parser');
-
+var async = require('async');
 
 app.use(bodyParser.json());
 
@@ -15,12 +15,39 @@ app.all('/', function(req, res, next) {
     next();
 });
 
+var folder = './casey/';
+var filenames = [];
+
 app.get('/', function(req, res){
-    console.log('GET /')
-     //var html = '<html><body><form method="post" action="http://localhost:3000">Name: <input type="text" name="name" /><input type="submit" value="Submit" /></form></body>';
+     console.log('GET /')
      var html = '<html><body><h1> From rpi!!!!</h1></body></html>';
      res.writeHead(200, {'Content-Type': 'text/html'});
-     res.end(html);
+
+     filenames = [];
+     fs.readdirSync(testFolder).forEach(file => {
+        filenames.push(file);
+      })
+
+     async.eachSeries(
+        // Pass items to iterate over
+        filenames,
+        // Pass iterator function that is called for each item
+        function(filename, cb) {
+          fs.readFile(filename, function(err, content) {
+            if (!err) {
+              res.write(content);
+            }
+            // Calling cb makes it go to the next item.
+            cb(err);
+          });
+        },
+        // Final callback after each item has been iterated over.
+        function(err) {
+          res.end()
+        //   res.end(html);
+        }
+      );
+     
 });
 
 const URLregex = /-.+[^//]/;
@@ -29,12 +56,10 @@ const URLregex = /-.+[^//]/;
 app.post('/', function(req, res){
     //TODO check for known fingerprint (me | Dom | alark | noopur)
     console.log('POST /');
-    // console.log(req.body);
     console.log(req.headers.referer);
-    
+
     var name = URLregex.exec(req.headers.referer)
     name = name[0].substring(1);;
-    // console.log(dir);
 
     fs.writeFile('./'+ name + '/' + new Date().getTime() + name + '.json', JSON.stringify(req.body), function(err) {     
         if(err) {
