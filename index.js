@@ -36,7 +36,7 @@ app.post('/', function(req, res){
     name = name[0].substring(1);;
     // console.log(dir);
 
-    fs.writeFile('./'+ name + '/' + new Date().getTime() + name + '-.json', JSON.stringify(req.body), function(err) {     
+    fs.writeFile('./'+ name + '/' + new Date().getTime() + name + '.json', JSON.stringify(req.body), function(err) {     
         if(err) {
             return console.log(err);
         }  
