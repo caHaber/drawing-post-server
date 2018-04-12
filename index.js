@@ -6,15 +6,16 @@ var async = require('async');
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./database/sketches.db');
+var viz = require('./viz.js');
 
 app.use(bodyParser.json());
 
 var total;
 
 db.all('SELECT * FROM MAIN',function(err,rows){
-    console.log(rows.length);
+    // console.log(rows.length);
     total = rows.length;
-    console.log(err);
+    // console.log(err);
 });
 
 app.all('/', function(req, res, next) {
@@ -24,6 +25,17 @@ app.all('/', function(req, res, next) {
 });
 
 var filenames = [];
+
+var style = 
+`<style type="text/css">
+
+.line{
+    fill: none;
+    // stroke: #ffab00;
+    // stroke-width: 3;
+}
+
+</style>`
 
 app.get('/', function(req, res){
      console.log('GET /')
@@ -40,15 +52,17 @@ app.get('/', function(req, res){
             res.end();
         } 
         else {
-            console.log(rows);
-            rows.forEach(function(d){
+            var svg = '<html>' + style + '<body>' + viz.generate(rows) +'</body></html>'    
+            res.write(svg);
+            // console.log(rows);
+            // rows.forEach(function(d){
                 
-                if(d.Sketch != null){
-                    // console.log(JSON.parse(d.Sketch));
-                    res.write(d.Sketch);
-                }
+            //     if(d.Sketch != null){
+            //         // console.log(JSON.parse(d.Sketch));
+            //         res.write(d.Sketch);
+            //     }
                    
-            });   
+            // });   
             res.end();
         }
         
@@ -60,15 +74,15 @@ const URLregex = /-.+[^//]/;
 
 app.post('/', function(req, res){
     //TODO check for known fingerprint (me | Dom | alark | noopur)
-    console.log('POST /');
-    console.log(req.headers.referer);
+    // console.log('POST /');
+    // console.log(req.headers.referer);
 
     var name = URLregex.exec(req.headers.referer)
     name = name[0].substring(1);;
 
     total++;
 
-    var Sketch,width,height,strokewidth,color;
+    var Sketch,width,height,strokewidth,color,timestamp;
 
     // console.log(r)
     Sketch = JSON.stringify(req.body.lineSegs);
@@ -76,16 +90,18 @@ app.post('/', function(req, res){
     height = req.body.height;
     strokewidth = req.body.strokeWidth;
     color = req.body.strokeColor.toString();
+    timestamp = new Date().toUTCString();
     
     try {
-        db.run("INSERT INTO MAIN VALUES(?,?,?,?,?,?,?)", [
+        db.run("INSERT INTO MAIN VALUES(?,?,?,?,?,?,?,?)", [
             total,
             name,
             Sketch,
             width,
             height,
             strokewidth,
-            color]);
+            color,
+            timestamp]);
     }catch(err){
         console.log(err);
     }
