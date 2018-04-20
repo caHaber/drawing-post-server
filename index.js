@@ -29,10 +29,13 @@ var filenames = [];
 var style = 
 `<style type="text/css">
 
-.line{
-    fill: none;
-    // stroke: #ffab00;
-    // stroke-width: 3;
+html, body{
+    width: 400px;
+    height: 700px;
+}
+
+.line {
+    fill:none;
 }
 
 </style>`
