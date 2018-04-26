@@ -99,14 +99,26 @@ function drawHexbins(svg,data)
 var hexes = g  
   .selectAll("path")
   .data(timeDays)
-  .enter().append("path")
-    // .attr("width", cellSize)
-    // .attr("height", cellSize)
-    .attr("transform", function(d,i) { console.log("hexes d",yA(d)); return "translate(" + (xA(d) -800)  + "," + (+yA(d)) + ")";  })
+  .enter()
+    .append("g")
+    .attr("class",function(d){return "day x" + (d.getMonth() + "x" + d.getDate()) } )
+    .attr("transform", function(d,i) {return "translate(" + (xA(d) -800)  + "," + (+yA(d)) + ")";  });
+
+hexes    
+    .append("clipPath")
+    .attr("id", function(d){return "x" + (d.getMonth() + "x" + d.getDate())} )   
+    .append("path")
     .attr("d", hexbin.hexagon())
     .attr("data-elem", function(d){return d})
-    .attr("fill","whitesmoke")
-    .attr("class",function(d,i){return"hex x" + (d.getMonth() + "x" + d.getDate()) });
+    .attr("fill","grey")
+    .attr("class",function(d,i){return"hexClip"});
+
+hexes .append("path")
+.attr("d", hexbin.hexagon())
+.attr("data-elem", function(d){return d})
+.attr("fill","grey")
+.attr("class",function(d,i){return"hex"});    
+
     // .attr("x", function(d) { return d3.timeWeek.count(d3.timeYear(d), d) * cellSize; })
     // .attr("y", function(d) { return d.getDay() * cellSize; })
     // .datum(d3.timeFormat("%Y-%m-%d"));
@@ -120,21 +132,26 @@ var hexes = g
 
       data.forEach(function(h){    
           var time = new Date(h.timestamp);  
-          
+          var timeString = "x"+(time.getMonth() + "x" + time.getDate());
 
         var line = d3.line()
-        .x(function(d) { return (d.x - h.Sketch[0].x) *.2; })
+        .x(function(d) { return (d.x - h.Sketch[0].x) *.2 - 30; })
         .y(function(d) { return (d.y - h.Sketch[0].y) *.2; });
 
         if(h !== null && h.Sketch !== null){
             var color = h.color.split(',');
-            g.append("path")
+
+            var day = svg.select("." + timeString);
+            // console.log(day);
+
+            day.append("path")
                 .datum(h.Sketch)
+                .attr("clip-path","url(#" + timeString + ")")
                 .attr("class",function(d){return"line x" + (time.getMonth() + "x" + time.getDate()) })
                 .attr("stroke-width", 1)
                 .attr("stroke", 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + color[3] + ')')
-                .attr("d",line)
-                .attr("transform", "translate(" + (  +xA(time)  - 30 - 800) + "," + (yA(time) ) + ")")
+                .attr("d",line);
+                // .attr("transform", "translate(" + (  +xA(time)  - 30 - 800) + "," + (yA(time) ) + ")")
                 
         }    
     })
