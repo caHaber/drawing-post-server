@@ -32,13 +32,21 @@ var style =
 html, body{
     width: 400px;
     height: 700px;
+    background: whitesmoke;
 }
 
 .line {
     fill:none;
 }
 
+svg {
+    background: whitesmoke;
+}
+
 </style>`
+var scrpt = `<script src="front.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script> `
+
+app.use(express.static(__dirname + '/'));
 
 app.get('/', function(req, res){
      console.log('GET /')
@@ -55,17 +63,8 @@ app.get('/', function(req, res){
             res.end();
         } 
         else {
-            var svg = '<html>' + style + '<body>' + viz.generate(rows) +'</body></html>'    
-            res.write(svg);
-            // console.log(rows);
-            // rows.forEach(function(d){
-                
-            //     if(d.Sketch != null){
-            //         // console.log(JSON.parse(d.Sketch));
-            //         res.write(d.Sketch);
-            //     }
-                   
-            // });   
+            var svg = '<html>' + style +  '<body>' + viz.generate(rows) +'</body>' + scrpt + '</html>'    
+            res.write(svg);   
             res.end();
         }
         
