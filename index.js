@@ -29,11 +29,29 @@ var filenames = [];
 var style = 
 `<style type="text/css">
 
+
+
 html, body{
     width: 400px;
     height: 700px;
     background: whitesmoke;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Merriweather|Roboto');
+
+ * {
+  font-family: 'Roboto', sans-serif;
+ }
+
+h1,h2,h3 {
+
+  font-family: 'Merriweather', serif;
+}
+
+.title > text {
+    font-family: 'Merriweather', serif;
+}
+
 
 text{
     fill: black;
@@ -68,8 +86,17 @@ svg {
     display:none;
 }
 
+a {
+    position: absolute;
+    bottom: 250px;
+    left: 50px;
+    color: black;
+}
+
 </style>`
 var scrpt = `<script src="front.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script> `
+
+var link = `<a href="http://cahaber.me/ds-casey/"><h3>Back to drawing pad...</h3></a>`;
 
 app.use(express.static(__dirname + '/'));
 
@@ -88,7 +115,7 @@ app.get('/', function(req, res){
             res.end();
         } 
         else {
-            var svg = '<html>' + style +  '<body>' + viz.generate(rows) +'</body>' + scrpt + '</html>'    
+            var svg = '<html>' + style +  '<body>' + viz.generate(rows) + link + '</body>' + scrpt + '</html>'    
             res.write(svg);   
             res.end();
         }
