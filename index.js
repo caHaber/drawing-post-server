@@ -35,12 +35,37 @@ html, body{
     background: whitesmoke;
 }
 
+text{
+    fill: black;
+    stroke: none;
+}
+
+path.domain {
+    stroke: none;
+}
+
+.tick > line{
+    stroke: none;
+}
+
+.tick > text{
+    text-anchor: start;
+}
+
+.title > text {
+    font-size: 2em;
+}
+
 .line {
     fill:none;
 }
 
 svg {
     background: whitesmoke;
+}
+
+.hide {
+    display:none;
 }
 
 </style>`

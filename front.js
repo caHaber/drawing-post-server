@@ -1,12 +1,26 @@
 window.onload = init;
 
+var transformMap = {};
+var formatTime,leftAxis;
+
 function init(){
 
     injectd3code()
 
+    var scale = d3.scaleBand()
+        .domain(["SUN","MON","TUE","WED","THR","FRI","SAT"])
+        .range([0,500]);
+
     console.log("frontend");
+    formatTime = d3.timeFormat("%b/%d");
+    leftAxis = d3.axisLeft(scale);
 
     var bins = d3.selectAll(".day");
+
+    d3.select("svg").attr("transform", "scale(2.5) translate(200,200)")
+.append("g")
+    .attr("transform", "translate(10,57)")
+    .call(leftAxis);
 
     d3.selectAll(".hex")
         .transition().attr("fill","white");
@@ -37,7 +51,7 @@ function transitionShape(me, hex){
 
     var d0 = hex ? "m0,-35l30.31088913245535,17.499999999999996l3.552713678800501e-15,35l-30.31088913245535,17.500000000000007l-30.31088913245535,-17.499999999999986l-1.7763568394002505e-14,-34.999999999999986z" : "m-50,-100l100,0l0,200l-100,0l0,-200z";
 
-    me.transition().duration(2000)
+    me.transition().duration(500)
     .on("start", function repeat() {
         d3.active(this)
         .attrTween("d", pathTween(d0, 4));
@@ -68,39 +82,74 @@ function touchstart(){
 
     if(!gday.classed("focus")){
         gday.moveToFront();
+
+        //Set original position using data-elem
+        gday.attr("data-elem", function(d){
+            return this.getAttribute("transform") } );
+
+
         gday
         .transition()
         .attr("transform", function(d){
-            return this.getAttribute("transform") +
-                         " scale(4)";
+            return "translate(150,250) scale(2)";
         });
 
         transitionShape(clip, false);
         transitionShape(gday.select(".hex"), false);
-    
+        //Set for me
+        me.attr("data-elem", function(d){
+            return this.getAttribute("transform") } );
+
         me.transition().attr("fill","white")
         .attr("transform", function(d){
-            return this.getAttribute("transform") +
-                         " scale(4)";
+            return "translate(150,250) scale(2)";
         });
+
+
+        var lines = gday.selectAll("path.line");
+
+        lines.each(function(d,i){
+            console.log(i,"lines");
+            d3.select(this).transition().attr("transform","translate(0," + ((i * 20) - 50) + ")");
+        })
+    
+
+        var text = gday.append("g").attr("class","info").attr("transform","translate(-45,-80)");
+        text.classed("hide",false);
+        text.append("text")
+
+        .text(formatTime(new Date(gday.select(".hex").attr("data-elem")) ));
+        text.moveToFront();
+
+
+
 
         gday.classed("focus",true);
     } else {
-        gday.moveToFront();
+        gday.moveToFront();   
+        gday.select("g.info").remove();
+
+        
+
         gday
         .transition()
         .attr("transform", function(d){
-            return this.getAttribute("transform") +
-                         " scale(.25)";
+            return this.getAttribute("data-elem");
         });
-    
+
+        var lines = gday.selectAll("path.line");
+
+        lines.each(function(d,i){
+            console.log(i,"lines");
+            d3.select(this).transition().attr("transform","translate(0,0)");
+        })
+
         transitionShape(clip, true);
         transitionShape(gday.select(".hex"), true);
 
         me.transition().attr("fill","white")
         .attr("transform", function(d){
-            return this.getAttribute("transform") +
-                         " scale(.25)";
+            return this.getAttribute("data-elem");
         });
         gday.classed("focus",false);
     }

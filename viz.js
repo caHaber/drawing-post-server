@@ -5,8 +5,8 @@ var jsdom = require("jsdom");
 var { JSDOM } = jsdom;
 
 
-var margin = {width: 50,
-    height: 50}
+var margin = {width:25,
+    height: 100}
 
 
     var height = 600,
@@ -41,6 +41,10 @@ exports.generate = function(data){
         .attr("xmlns:xlink", d3.namespaces.xlink)
         .attr("width", width)
         .attr("height", height);
+
+        svg.append("g").attr("class","title").attr("transform","translate(0,50)")
+            .append("text")
+            .text("Casey's Last Month");
         // .attr("viewBox", "0 0 " + width + " " + height);
 
     return drawData(svg, data).node().outerHTML;
@@ -92,7 +96,7 @@ function drawHexbins(svg,data)
     // svg.attr("transform","scale(.5) translate(-300,-300)");
 
     var g = svg.append("g")
-    .attr("transform", function(d){return "translate(" + (margin.width)  + "," + (margin.height + 50) + ")"; })
+    .attr("transform", function(d){return "translate(" + (margin.width)  + "," + (margin.height) + ")"; })
     .attr("fill", "none")
     .attr("stroke", "black");
 
